@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.Callable;
+
 
 @RestController
 public class StatusController {
@@ -16,12 +18,12 @@ public class StatusController {
 
 
     @PostMapping("/status")
-    public Object getStatus(@RequestBody StatusRequestBody statusRequestBody)  {
+    public Callable<Object> getStatus(@RequestBody StatusRequestBody statusRequestBody)  {
         try {
-            return statusService.getStatus(statusRequestBody);
+            return () -> {return statusService.getStatus(statusRequestBody);};
         }
         catch (Exception e){
-            return "Some error occurred" + e.getMessage() ;
+            return () -> { return "Some error occurred" + e.getMessage(); };
         }
 
 
